@@ -1,0 +1,29 @@
+<div id="game-zone">
+  <div id="bars">
+    <div class="progress-container progress-hp">
+      <progress class="progressplayer bar" id="hp" value="100" max="100"></progress>
+      <p class="progress-label"> HP </p>
+    </div>
+
+    <div class="progress-container progress-mp">
+      <progress class="progressplayer bar" id="mp" value="100" max="100"></progress>
+      <p class="progress-label"> MP </p>
+    </div>
+
+    <div class="progress-container progress-sp">
+      <progress class="progressplayer bar" id="sp" value="100" max="100"></progress>
+      <p class="progress-label"> SP </p>
+    </div>
+  </div>
+  <div id="equipement" class="ui-button" (click)="toggleEquipement()" (touchend)="toggleEquipement()"><img
+      src="./assets/interactions/equipement.svg"></div>
+  <div id="inventory" class="ui-button" (click)="toggleInventory()" (touchend)="toggleInventory()"><img
+      src="./assets/interactions/inventory.svg"></div>
+  <div id="stats" class="ui-button" (click)="toggleStats()" (touchend)="toggleStats()"><img
+      src="./assets/interactions/stats.svg"></div>
+
+  <canvas id="game"></canvas>
+  <div id="left-joystick-zone"></div>
+  <div id="interaction"><img id="interaction-image" src=""></div>
+  <app-stats *ngIf="stats"></app-stats>
+</div>

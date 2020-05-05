@@ -1,0 +1,45 @@
+<div id="stats-menu">
+    <div id="stats-items">
+        <span class="stats-section-title">Character Info</span>
+        <div id="character-info">
+            <span>Name: {{name}}</span>
+            <span> Threat Level : {{romanize(threat)}}</span>
+        </div>
+
+        <span class="stats-section-title">Combat Stats</span>
+        <div class="stats-section">
+            <div class="stats-part" *ngFor="let part of stats.combat; let i = index;">
+                <div class="stats-item" *ngFor="let stat of part;" [class.reversed]="i%2!==0">
+                    <img [src]="stat[0]"> {{stat[1]}} {{stat[2]}}
+                </div>
+            </div>
+        </div>
+
+        <span class="stats-section-title">Gathering Stats</span>
+        <div class="stats-section">
+            <div class="stats-part" *ngFor="let part of stats.gathering; let i = index;">
+                <div class="stats-item" *ngFor="let stat of part;" [class.reversed]="i%2!==0">
+                    <img [src]="stat[0]"> {{stat[1]}} {{stat[2]}}
+                </div>
+            </div>
+        </div>
+
+        <span class="stats-section-title">Artisan Stats</span>
+        <div class="stats-section">
+            <div class="stats-part" *ngFor="let part of stats.artisan; let i = index;">
+                <div class="stats-item" *ngFor="let stat of part;" [class.reversed]="i%2!==0">
+                    <img [src]="stat[0]"> {{stat[1]}} {{stat[2]}}
+                </div>
+            </div>
+        </div>
+
+        <span class="stats-section-title">Support Stats</span>
+        <div class="stats-section">
+            <div class="stats-part" *ngFor="let part of stats.support; let i = index;">
+                <div class="stats-item" *ngFor="let stat of part" [class.reversed]="i%2!==0">
+                    <img [src]="stat[0]"> {{stat[1]}} {{stat[2]}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
