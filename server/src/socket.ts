@@ -4,7 +4,8 @@ import { UserManager } from "./controllers/user.manager";
 import { MapManager } from "./controllers/map.manager";
 import { SocketDispatcher } from "./socket/dispatcher";
 import { IUserAttack } from "./shared";
-import { MapLootManager } from "./controllers/map.Loot.manager";
+import { MapLootManager } from "./controllers/map.loot.manager";
+import { ClientManager } from "./controllers/client.manager";
 
 export class Socket {
   public io: socket.Server;
@@ -33,9 +34,8 @@ export class Socket {
 
     // PLAYERS
     sock.on.create(async (c) => {
-      await MapManager.get().users.add(
-        UserManager.get().login(c.username, "c1", c.dna, sock)
-      );
+      const u = UserManager.get().login(c.username, "c1", c.dna, sock);
+      await MapManager.get().users.add(u);
 
       sock.username = c.username;
       sock.isAi = false;
@@ -67,10 +67,9 @@ export class Socket {
 
     // PLAYERS
     sock.on.equip(async (item) => {
-      console.log("EQUIP");
       const name = sock.username;
       const info = UserManager.get().updateEquipement(name, item);
-      console.log(info);
+
       if (info) {
         const { inventory, equipement } = info;
         const users = MapManager.get().users.filter(name, false);
@@ -89,8 +88,8 @@ export class Socket {
 
       const { ai, m } = res;
       const enemies = await ai.emit.evaluateAttack(name);
-      const user = UserManager.get().get(name);
 
+      const user = UserManager.get().get(name);
       const attack: IUserAttack = {
         name,
         enemies: MapManager.get().enemies.userAttack(user, enemies, m),

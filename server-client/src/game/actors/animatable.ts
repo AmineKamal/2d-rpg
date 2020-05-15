@@ -1,5 +1,12 @@
-import { Actor, Label, Color, TextAlign, CollisionType } from 'excalibur';
-import { Direction, PlayerAnimation, ILocation } from '../shared';
+import {
+  Actor,
+  Label,
+  Color,
+  TextAlign,
+  CollisionType,
+  Engine,
+} from 'excalibur';
+import { Direction, PlayerAnimation, ILocation, TO_DIR } from '../shared';
 import { AttackBox } from './attackbox';
 
 export interface AnimatableArgs {
@@ -21,13 +28,12 @@ export class Animatable extends Actor {
     this.ID = args.id;
     this.body.collider.type = CollisionType.Active;
     this.name = args.name;
-    this.dir = 'down';
+    this.dir = 270;
     this.createAttackBox();
   }
 
-  public draw(ctx: CanvasRenderingContext2D, delta: number) {
-    super.draw(ctx, delta);
-    this.setZIndex(this.pos.y);
+  public update(engine: Engine, delta: number) {
+    super.update(engine, delta);
     this.updateAttackBox();
   }
 
@@ -40,7 +46,8 @@ export class Animatable extends Actor {
   }
 
   private updateAttackBox() {
-    switch (this.dir) {
+    const dir = TO_DIR(this.dir);
+    switch (dir) {
       case 'down':
         return this.attackBox.down();
 

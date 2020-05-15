@@ -1,7 +1,7 @@
-import { UIActor, Vector } from 'excalibur';
+import { ScreenElement, Vector } from 'excalibur';
 import { isMobile } from '../../core/device';
 
-export class Clickable extends UIActor {
+export class Clickable extends ScreenElement {
   private static clickables: Clickable[] = [];
 
   private pointerIgnoreFlag = false;
@@ -24,6 +24,7 @@ export class Clickable extends UIActor {
     if (cl) this._cl = cl;
     if (dbl) this._dbl = dbl;
 
+    console.log('clickable');
     Clickable.clickables.push(this);
   }
 
@@ -32,9 +33,7 @@ export class Clickable extends UIActor {
       const x = ev.clientX;
       const y = ev.clientY;
 
-      const cls = this.clickables.filter((c) =>
-        c.getBounds().contains(new Vector(x, y))
-      );
+      const cls = this.clickables.filter((c) => c.contains(x, y, true));
 
       cls.forEach((c) => c.onclick());
     });

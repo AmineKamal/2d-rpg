@@ -4,7 +4,7 @@ import { MapLocation, IEnemy, TrackAI, IEnemyAttacked } from "../shared";
 import { ENEMIES } from "../data/enemies.map";
 import { User } from "../classes/user";
 import { DamageManager } from "./damage.manager";
-import { MapLootManager } from "./map.Loot.manager";
+import { MapLootManager } from "./map.loot.manager";
 
 export class MapEnemyManager {
   private enemies: StrictMap<MapLocation, Enemy[]> = ENEMIES;

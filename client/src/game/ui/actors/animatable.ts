@@ -25,7 +25,7 @@ export class Animatable<Sprite extends string> extends Actor {
     this.body.collider.type = CollisionType.Active;
     this.name = args.name;
     this.sprite = args.sprite;
-    this.dir = 'down';
+    this.dir = 270;
     this.add(this.label());
   }
 

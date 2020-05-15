@@ -32,15 +32,6 @@ export abstract class Prop extends Actor {
     this.onCollision();
   }
 
-  public draw(ctx: CanvasRenderingContext2D, delta: number) {
-    super.draw(ctx, delta);
-    this.setZIndex(this.pos.y);
-  }
-
-  public update(engine: Engine, delta: number) {
-    super.update(engine, delta);
-  }
-
   public setSprite(key: PropSprite) {
     super.setDrawing(key);
   }

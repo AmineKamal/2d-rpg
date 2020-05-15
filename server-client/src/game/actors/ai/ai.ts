@@ -1,4 +1,4 @@
-import { Animatable as A, AnimatableArgs } from '../animatable';
+import { Animatable, AnimatableArgs } from '../animatable';
 import { Tasks } from './tasks';
 import { Engine } from '../../core/engine';
 import { TrackAI, CombatStat, IStat, AIEnemy } from '../../shared';
@@ -9,7 +9,7 @@ interface AIArgs extends AnimatableArgs {
   threat: number;
 }
 
-export abstract class AI extends A {
+export abstract class AI extends Animatable {
   public tasks: Tasks;
   public stats: StrictMap<CombatStat, IStat>;
   protected threat: number;
@@ -44,6 +44,7 @@ export abstract class AI extends A {
   private subscribeEngine() {
     Engine.get().started.subscribe((started) => {
       if (started) this.tasks.routine.start();
+      else this.tasks.stopAll();
     });
   }
 }

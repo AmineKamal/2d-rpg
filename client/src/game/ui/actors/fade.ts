@@ -2,8 +2,8 @@ import { Sprite, Actor, CollisionType } from 'excalibur';
 import { Engine as E } from 'src/game/core/engine';
 
 export class Fade extends Actor {
-  public static init({ x, y, width, height }: Actor, s: Sprite) {
-    const f = new Fade({ x, y, width, height }, s);
+  public static init({ pos, width, height }: Actor, s: Sprite) {
+    const f = new Fade({ x: pos.x, y: pos.y, width, height }, s);
     E.get().addActor(f);
   }
 
@@ -11,7 +11,7 @@ export class Fade extends Actor {
     super({ x, y, width, height });
     this.addDrawing(s);
     this.opacity = 0.5;
-    this.collisionType = CollisionType.PreventCollision;
+    this.body.collider.type = CollisionType.PreventCollision;
   }
 
   public draw(ctx: CanvasRenderingContext2D, delta: number) {

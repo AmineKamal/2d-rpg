@@ -2,6 +2,7 @@ import { Map } from "simple-structures/lib/lib/types";
 import { SocketDispatcher } from "../socket/dispatcher";
 import { UserSprite, IUserDNA, IItem } from "../shared";
 import { User } from "../classes/user";
+import { clone } from "simple-structures";
 
 export class UserManager {
   private static instance: UserManager;
@@ -82,9 +83,14 @@ export class UserManager {
 
     console.log("IN INVENTORY");
 
-    user.equipement[item.equipSlot] = item;
     const invItem = user.inv.get(idx);
-    invItem.quantity--;
+
+    if (item.equipSlot === "quiver" || item.equipAll)
+      item.quantity = invItem.quantity;
+    else item.quantity = 1;
+
+    user.equipement[item.equipSlot] = item;
+    invItem.quantity -= item.quantity;
 
     if (invItem.quantity < 1) user.inv.remove(idx);
 

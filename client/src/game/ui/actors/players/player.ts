@@ -10,7 +10,7 @@ const PH = 32 as const;
 
 export class Player extends Animatable<UserSprite> {
   private constructor(init: IUser) {
-    super({ ...init, w: PW, h: PH, id: '' });
+    super({ ...init, w: PW, h: PH, id: init.name });
     this.tasks = new PlayerTasks(this);
     this.equipement = init.equipement;
     this.dna = init.dna;

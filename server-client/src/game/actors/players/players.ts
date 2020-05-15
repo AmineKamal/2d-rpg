@@ -25,6 +25,7 @@ export class Players {
     const p = await Player.init(user);
     this.players.push(p);
     Engine.get().addActor(p.export());
+    Engine.get().startEngine();
   }
 
   public async removePlayer(name: string) {
@@ -32,6 +33,8 @@ export class Players {
     if (i === -1) return;
     const rm = this.players.splice(i, 1);
     Engine.get().removeActor(rm[0].export());
+
+    if (this.players.length <= 0) Engine.get().stopEngine();
   }
 
   public async populate(users: IUser[]) {

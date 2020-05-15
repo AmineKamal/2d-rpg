@@ -1,10 +1,11 @@
-import { Actor } from 'excalibur';
-import { run, any, Task, StrictMap } from 'simple-structures';
+import { Actor, Vector } from 'excalibur';
+import { run, any, Task, StrictMap, rand } from 'simple-structures';
 import { IDLE_MAP, MOVE_MAP } from '../../core/animation.maps';
-import { Direction, AIMovement, TaskType } from '../../shared';
+import { Direction, AIMovement, TaskType, TO_DIR } from '../../shared';
 import { AI } from './ai';
 import { Tracker } from './tracker';
 import { GAME_TICK } from 'src/game/constants';
+import { VELOCITY } from '../players/player.movement';
 
 type StrictTasks = StrictMap<TaskType, ActionTask<any, any> | (() => void)>;
 export class Tasks implements StrictTasks {
@@ -57,13 +58,10 @@ export class Tasks implements StrictTasks {
 
   private routineTask() {
     const routine = () => {
-      const vx = any([-1, 1]);
-      const vy = any([-1, 1]);
-      const xgreater = any([true, false]);
-      this.move(xgreater, vx, vy);
+      this.move(rand(0, 360));
     };
 
-    const t = run(() => routine()).every(10 * GAME_TICK);
+    const t = run(() => routine()).every(100 * GAME_TICK);
     t.start();
 
     routine();
@@ -72,15 +70,15 @@ export class Tasks implements StrictTasks {
 
   private followTask(actor: Actor) {
     const follow = () => {
-      const vx = actor.pos.x - this.actor.pos.x > 0 ? 1 : -1;
-      const vy = actor.pos.y - this.actor.pos.y > 0 ? 1 : -1;
-      const dx = Math.abs(actor.pos.x - this.actor.pos.x);
-      const dy = Math.abs(actor.pos.y - this.actor.pos.y);
-      const xgreater = dx > dy;
-      this.move(xgreater, vx, vy);
+      const vx = actor.pos.x - this.actor.pos.x;
+      const vy = actor.pos.y - this.actor.pos.y;
+
+      const rad = new Vector(vx, -vy).toAngle();
+      const angle = (rad * 180) / Math.PI;
+      this.move(angle < 0 ? angle + 360 : angle);
     };
 
-    const t = run(() => follow()).every(GAME_TICK);
+    const t = run(() => follow()).every(10 * GAME_TICK);
     t.start();
 
     follow();
@@ -95,14 +93,12 @@ export class Tasks implements StrictTasks {
     Tracker.get().update(id, track);
   }
 
-  private move(xgreater: boolean, vx: number, vy: number) {
-    const xanim = vx > 0 ? 'right' : 'left';
-    const yanim = vy > 0 ? 'down' : 'up';
+  private move(dir: Direction) {
+    const [vx, vy] = VELOCITY(dir);
 
-    const velx = xgreater ? vx * this.actor.speed : 0;
-    const vely = xgreater ? 0 : vy * this.actor.speed;
-    const dir: Direction = xgreater ? xanim : yanim;
-    const anim = MOVE_MAP[dir];
+    const velx = vx * this.actor.speed;
+    const vely = vy * this.actor.speed;
+    const anim = MOVE_MAP[TO_DIR(dir)];
     const x = this.actor.pos.x;
     const y = this.actor.pos.y;
     const pos = { x, y };
@@ -116,7 +112,7 @@ export class Tasks implements StrictTasks {
     const velx = 0;
     const vely = 0;
     const dir = this.actor.dir;
-    const anim = IDLE_MAP[this.actor.dir];
+    const anim = IDLE_MAP[TO_DIR(this.actor.dir)];
     const x = this.actor.pos.x;
     const y = this.actor.pos.y;
     const pos = { x, y };

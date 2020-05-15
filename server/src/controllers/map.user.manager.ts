@@ -3,9 +3,9 @@ import { initStrict } from "simple-structures/lib/lib/object";
 import { User } from "../classes/user";
 import { MapLocation, MAPS, IUser } from "../shared";
 import { location as loc } from "../data/locations";
-import { MapEnemyManager } from "./mapEnemy.manager";
+import { MapEnemyManager } from "./map.enemy.manager";
 import { SocketDispatcher } from "../socket/dispatcher";
-import { MapLootManager } from "./map.Loot.manager";
+import { MapLootManager } from "./map.loot.manager";
 
 export class MapUserManager {
   public constructor(enemyManager: MapEnemyManager) {
@@ -93,7 +93,10 @@ export class MapUserManager {
   }
 
   public broadcast(m: MapLocation) {
-    return [...this.users[m].map((u) => u.s), this.ai[m]];
+    const sockets = [...this.users[m].map((u) => u.s)];
+    if (this.ai[m]) sockets.push(this.ai[m]);
+
+    return sockets;
   }
 
   public broadcastUsers(m: MapLocation) {

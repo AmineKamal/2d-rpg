@@ -7,10 +7,10 @@ import {
   SHOOT_MAP,
   OVERSIZE_MAP,
 } from '../../../core/animation.maps';
-import { LeftJoystick } from '../../../core/leftJoystick';
-import { PlayableAnimations, Direction } from '../../../shared';
+import { LeftJoystick } from '../../../controls/leftJoystick';
+import { PlayableAnimations, Direction, Dir, TO_DIR } from '../../../shared';
 import { StrictMap } from 'simple-structures';
-import { Actions } from '../../../core/actions';
+import { Actions } from '../../../controls/actions';
 
 export class PlayerTasks {
   private player: Player;
@@ -21,7 +21,7 @@ export class PlayerTasks {
     this.locked = false;
   }
 
-  public attack() {
+  public onAttack() {
     switch (this.player.equipement.weapon?.attackType) {
       case 'oversize':
         return this.oversize();
@@ -56,14 +56,14 @@ export class PlayerTasks {
     this.set(SPELL_MAP, 7);
   }
 
-  private set(map: StrictMap<Direction, PlayableAnimations>, frames: number) {
+  private set(map: StrictMap<Dir, PlayableAnimations>, frames: number) {
     if (this.locked) return;
-    this.player.setAnimation(map[this.player.dir], true);
+    this.player.setAnimation(map[TO_DIR(this.player.dir)], true);
     this.lock();
 
     setTimeout(() => {
       this.unlock();
-      this.player.setAnimation(IDLE_MAP[this.player.dir]);
+      this.player.setAnimation(IDLE_MAP[TO_DIR(this.player.dir)]);
     }, frames * 75);
   }
 

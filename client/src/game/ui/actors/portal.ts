@@ -4,7 +4,7 @@ import { Player } from './players/player';
 import { State } from '../../data/state';
 import { Sock } from '../../socket/dispatcher';
 import { MapLocation } from '../../shared';
-import { LeftJoystick } from '../../core/leftJoystick';
+import { LeftJoystick } from '../../controls/leftJoystick';
 
 export class Portal extends Actor {
   private name: MapLocation;

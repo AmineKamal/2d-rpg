@@ -20,7 +20,7 @@
     "@angular/platform-browser-dynamic": "~9.1.0",
     "@angular/router": "~9.1.0",
     "axios": "^0.19.2",
-    "excalibur": "^0.23.0",
+    "excalibur": "^0.24.2",
     "nipplejs": "^0.8.5",
     "rxjs": "~6.5.4",
     "simple-structures": "^1.0.7",

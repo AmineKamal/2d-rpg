@@ -3,14 +3,16 @@ import { Direction, IPlayerMovement } from '../../shared';
 import { Players } from './players';
 import { Sock } from '../../socket/dispatcher';
 import { Player } from './player';
-import { IDLE_MAP, MOVE_MAP } from '../../core/animation.maps';
+import { Vector } from 'excalibur';
 
-const VELOCITY: StrictMap<Direction, readonly [number, number]> = {
-  up: [0, -1],
-  down: [0, 1],
-  right: [1, 0],
-  left: [-1, 0],
-} as const;
+export const VELOCITY: (dir: Direction) => readonly [number, number] = (
+  dir: Direction
+) => {
+  if (dir < 0) return [0, 0];
+
+  const v = Vector.fromAngle((dir * Math.PI) / 180); // dir is in degrees
+  return [v.x, -v.y] as const;
+};
 
 export class PlayerMovement {
   private static initialized = false;
@@ -29,7 +31,7 @@ export class PlayerMovement {
   }
 
   private static move(p: Player, dir: Direction, speed: number) {
-    const [vx, vy] = VELOCITY[dir];
+    const [vx, vy] = VELOCITY(dir);
     p.vel.x = vx * speed;
     p.vel.y = vy * speed;
     p.dir = dir;

@@ -1,10 +1,10 @@
-import { UIActor, Color } from 'excalibur';
+import { ScreenElement, Color } from 'excalibur';
 
-export class SmallBar extends UIActor {
+export class SmallBar extends ScreenElement {
   private current: number;
   private max: number;
-  private empty: UIActor;
-  private full: UIActor;
+  private empty: ScreenElement;
+  private full: ScreenElement;
 
   public constructor(
     x: number,
@@ -33,14 +33,14 @@ export class SmallBar extends UIActor {
 
   private createFull() {
     const w = (this.current / this.max) * this.width;
-    this.full = new UIActor(0, 0, w, this.height);
+    this.full = new ScreenElement(0, 0, w, this.height);
     this.full.color = Color.Red;
     this.add(this.full);
   }
 
   private createEmpty() {
     const w = ((this.max - this.current) / this.max) * this.width;
-    this.empty = new UIActor(this.full.width, 0, w, this.height);
+    this.empty = new ScreenElement(this.full.width, 0, w, this.height);
     this.empty.color = Color.Gray;
     this.add(this.empty);
   }

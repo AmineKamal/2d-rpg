@@ -1,5 +1,7 @@
-import { MapUserManager } from "./mapUser.manager";
-import { MapEnemyManager } from "./mapEnemy.manager";
+import { MapUserManager } from "./map.user.manager";
+import { MapEnemyManager } from "./map.enemy.manager";
+import { StrictMap } from "simple-structures";
+import { MapLocation } from "../shared";
 
 export class MapManager {
   private static instance: MapManager;

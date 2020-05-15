@@ -23,7 +23,8 @@ export type ClientEvent =
   | 'create'
   | 'ai'
   | 'equip'
-  | 'attack';
+  | 'attack'
+  | 'loot';
 
 export type ServerEvent =
   | 'move'
@@ -33,7 +34,8 @@ export type ServerEvent =
   | 'track'
   | 'equip'
   | 'attack'
-  | 'evaluateAttack';
+  | 'evaluateAttack'
+  | 'loot';
 
 export type SocketOnAction<I, O> = (f: (data: I) => Promise<O>) => void;
 export type SocketEmitAction<I, O> = (data: I) => Promise<O>;
@@ -51,6 +53,11 @@ export interface IEnemyAttacked {
 export interface IUserAttack {
   name: string;
   enemies: IEnemyAttacked[];
+}
+
+export interface IUpdateLoot {
+  id: string;
+  items: IItem[];
 }
 
 export const COMBAT_ATTRIBUTES = ['health', 'stamina', 'mana'] as const;
@@ -137,9 +144,11 @@ export interface IItem {
   equipSlot?: EquipementSlot;
   equipSprite?: string;
   attackType?: AttackType;
+  equipAll?: boolean;
 }
 
 export const EQUIPEMENT_SLOTS = [
+  'quiver',
   'earring1',
   'head',
   'earring2',
@@ -161,6 +170,7 @@ export const EQUIPEMENT_SLOTS = [
 export type EquipementSlot = typeof EQUIPEMENT_SLOTS[number];
 
 export class IUserEquipement implements StrictMap<EquipementSlot, any> {
+  quiver: IItem;
   feet: IItem;
   legs: IItem;
   belt: IItem;
@@ -230,6 +240,7 @@ export interface IEnemy {
   attributes: StrictMap<CombatAttribute, number>;
   threat: number;
   tracked?: boolean;
+  dead: boolean;
 }
 
 export const TASKS = ['routine', 'follow', 'dead'] as const;
@@ -258,6 +269,7 @@ export interface InitGame {
   map: MapLocation;
   users: IUser[];
   enemies: IEnemy[];
+  loots: IUpdateLoot[];
 }
 
 export interface IPlayerMovement {
@@ -268,7 +280,17 @@ export interface IPlayerMovement {
 }
 
 export const DIRECTIONS = ['up', 'down', 'left', 'right'] as const;
-export type Direction = typeof DIRECTIONS[number];
+export type Dir = typeof DIRECTIONS[number];
+export type Direction = number;
+
+export const TO_DIR = (n: Direction): Dir => {
+  if (n < 0) return 'down';
+  else if (n < 75) return 'right';
+  else if (n <= 105) return 'up';
+  else if (n < 255) return 'left';
+  else if (n <= 285) return 'down';
+  else return 'right';
+};
 
 export const MOVE_DIRECTIONS = ['m_up', 'm_down', 'm_left', 'm_right'] as const;
 export type MoveDirection = typeof MOVE_DIRECTIONS[number];

@@ -1,7 +1,6 @@
 import * as Tiled from './tiled';
 import { Actor, CollisionType, Color } from 'excalibur';
 import { Resources } from './resources';
-import { Portal } from '../actors/portal';
 import { PROPS, PropType } from '../actors/props/props';
 
 export class ObjectLoader {
@@ -25,10 +24,6 @@ export class ObjectLoader {
 
   public async loadCollision(object: Tiled.Object) {
     return this.createActor(object, Color.Yellow, CollisionType.Fixed);
-  }
-
-  public async loadPortal(object: Tiled.Object) {
-    return new Portal(object);
   }
 
   public clone(actor: Actor) {

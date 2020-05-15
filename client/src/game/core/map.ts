@@ -30,14 +30,14 @@ export class MapLoader {
     const sheets = await this.getTileSheets(tiledmap.tilesets);
     const tilemap = this.initTileMap(tiledmap);
 
-    sheets.forEach(s => tilemap.registerSpriteSheet(s.id, s.sheet));
-    const gids = sheets.map(s => ({ id: s.id, gid: s.gid }));
+    sheets.forEach((s) => tilemap.registerSpriteSheet(s.id, s.sheet));
+    const gids = sheets.map((s) => ({ id: s.id, gid: s.gid }));
 
     this.tilelayers(tiledmap.layers, tilemap, gids);
     const objects = await this.objectLayers(tiledmap.layers);
 
     this.maps[name] = this.initScene(g, tilemap);
-    objects.forEach(o => this.maps[name].add(o));
+    objects.forEach((o) => this.maps[name].add(o));
 
     return this.maps[name];
   }
@@ -48,13 +48,15 @@ export class MapLoader {
   }
 
   private async getTileSheets(tilesets: Tiled.Tileset[]) {
-    const filtered = tilesets.filter(ts => ts.source[0] === 't');
-    const sources = filtered.map(ts => ts.source.split('.')[0]);
-    const promises = sources.map(s => axios.get<Tiled.TileSheet>(this.path(s)));
-    const tiledsheets = (await Promise.all(promises)).map(res => res.data);
+    const filtered = tilesets.filter((ts) => ts.source[0] === 't');
+    const sources = filtered.map((ts) => ts.source.split('.')[0]);
+    const promises = sources.map((s) =>
+      axios.get<Tiled.TileSheet>(this.path(s))
+    );
+    const tiledsheets = (await Promise.all(promises)).map((res) => res.data);
 
     const sheets = await Promise.all(
-      tiledsheets.map(ts => Resources().getSheet(ts))
+      tiledsheets.map((ts) => Resources().getSheet(ts))
     );
 
     return sheets.map((s, i) => ({ ...s, gid: filtered[i].firstgid }));
@@ -74,9 +76,9 @@ export class MapLoader {
   }
 
   private tilelayers(layers: Tiled.Layer[], tm: TileMap, gids: Gid[]) {
-    const tl = layers.filter(l => l.type === 'tilelayer');
+    const tl = layers.filter((l) => l.type === 'tilelayer');
 
-    tl.forEach(l =>
+    tl.forEach((l) =>
       l.data.forEach((d, i) => {
         if (d !== 0) {
           const { name, idx } = this.evaluateGids(d, gids);
@@ -100,21 +102,21 @@ export class MapLoader {
   }
 
   private async objectLayers(layers: Tiled.Layer[]) {
-    const ol = layers.filter(l => l.type === 'objectgroup');
-    const obs = ol.find(l => l.name === 'objects').objects;
-    const cols = ol.find(l => l.name === 'collisions').objects;
-    const ps = ol.find(l => l.name === 'portals').objects;
+    const ol = layers.filter((l) => l.type === 'objectgroup');
+    const obs = ol.find((l) => l.name === 'objects').objects;
+    const cols = ol.find((l) => l.name === 'collisions').objects;
+    const ps = ol.find((l) => l.name === 'portals').objects;
 
     const objects = await Promise.all(
-      obs.map(o => ObjectLoader.get().loadObject(o))
+      obs.map((o) => ObjectLoader.get().loadObject(o))
     );
 
     const collisions = await Promise.all(
-      cols.map(c => ObjectLoader.get().loadCollision(c))
+      cols.map((c) => ObjectLoader.get().loadCollision(c))
     );
 
     const portals = await Promise.all(
-      ps.map(p => ObjectLoader.get().loadPortal(p))
+      ps.map((p) => ObjectLoader.get().loadPortal(p))
     );
 
     return [...objects, ...collisions, ...portals];

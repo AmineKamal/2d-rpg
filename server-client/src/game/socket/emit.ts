@@ -26,6 +26,7 @@ export class SocketEmit implements SocketEmitStrict {
     public create = emitAction<ICreateAccount, boolean>('create', m),
     public ai = emitAction<MapLocation, void>('ai', m),
     public equip = emitAction<void, void>('equip', m),
-    public attack = emitAction<void, void>('attack', m)
+    public attack = emitAction<void, void>('attack', m),
+    public loot = emitAction<void, void>('loot', m)
   ) {}
 }

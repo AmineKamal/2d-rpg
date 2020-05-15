@@ -1,1 +1,1 @@
-export const GAME_TICK = 1000; // ms
+export const GAME_TICK = 100; // ms

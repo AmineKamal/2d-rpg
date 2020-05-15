@@ -16,4 +16,7 @@ export const LONG_SLEEVE_SHIRT_M_BLACK: Item = (quantity: number) => ({
   type: "WEARABLE",
   equipSprite: "torso/longsleeve_shirt/black",
   equipSlot: "torso",
+  bonus: {
+    slash: 100,
+  },
 });

@@ -1,9 +1,10 @@
 import * as Tiled from './tiled';
 import axios from 'axios';
 import { Map } from 'simple-structures';
-import { TileMap, TileSprite, Scene, Engine } from 'excalibur';
+import { TileMap, TileSprite, Engine } from 'excalibur';
 import { Resources } from './resources';
 import { ObjectLoader } from './object';
+import { Scene } from './scene';
 
 interface Gid {
   id: string;

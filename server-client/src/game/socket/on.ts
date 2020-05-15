@@ -28,6 +28,7 @@ export class SocketOn implements SocketOnStrict {
     public track = onAction<TrackAI, void>('track', m),
     public equip = onAction<void, void>('equip', m),
     public evaluateAttack = onAction<string, string[]>('evaluateAttack', m),
-    public attack = onAction<IUserAttack, void>('attack', m)
+    public attack = onAction<IUserAttack, void>('attack', m),
+    public loot = onAction<void, void>('loot', m)
   ) {}
 }

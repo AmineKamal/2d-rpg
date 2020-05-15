@@ -5,6 +5,7 @@ import { Sock } from '../../socket/dispatcher';
 import { Enemies } from './enemies/enemies';
 import { Players } from '../players/players';
 import { GAME_TICK } from 'src/game/constants';
+import { Engine } from 'src/game/core/engine';
 
 export class Tracker {
   private static instance: Tracker;
@@ -12,8 +13,10 @@ export class Tracker {
   private task: Task;
 
   private constructor() {
-    this.task = run(() => this.publish()).every(GAME_TICK);
-    this.task.start();
+    Engine.get().started.subscribe((state) => {
+      if (state) this.start();
+      else this.stop();
+    });
   }
 
   public static get() {
@@ -45,6 +48,12 @@ export class Tracker {
     if (enemies.length > 0) {
       Sock.emit.track({ map, enemies });
     }
+  }
+
+  start() {
+    if (this.task) this.task.stop();
+    this.task = run(() => this.publish()).every(10 * GAME_TICK);
+    this.task.start();
   }
 
   stop() {

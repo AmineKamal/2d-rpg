@@ -15,7 +15,7 @@ export async function main() {
     await Enemies.get().populate(data.enemies);
     await Players.get().populate(data.users);
     await g.goto(data.map);
-    await g.startEngine();
+    if (data.users.length > 0) await g.startEngine();
   });
 
   SocketEvents.init();

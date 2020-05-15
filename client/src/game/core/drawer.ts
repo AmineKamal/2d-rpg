@@ -17,6 +17,7 @@ export class Drawer {
     const skin = this.path('dna', dna.sex, 'skin', dna.skin);
     const eyes = this.path('dna', dna.sex, 'eyes', dna.eyes);
     const hair = this.path('dna', dna.sex, 'hair', dna.hair, dna.hairColor);
+    const shadow = this.path('shadows', 'shadow');
 
     const order: EquipementSlot[] = [
       'torso',
@@ -32,7 +33,7 @@ export class Drawer {
       'weapon',
     ];
 
-    const layers = [skin, eyes, hair];
+    const layers = [shadow, skin, eyes, hair];
 
     order.forEach((k) => {
       if (equip[k])

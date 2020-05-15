@@ -12,7 +12,7 @@ export class SocketEvents {
     Sock.on.equip((equip) => Players.get().equip(equip));
 
     Sock.on.attack(async (player) => {
-      Players.get().find(player.name).tasks.attack();
+      Players.get().find(player.name).tasks.onAttack();
       player.enemies.forEach((e) => Enemies.get().find(e.id).receiveAttack(e));
     });
 

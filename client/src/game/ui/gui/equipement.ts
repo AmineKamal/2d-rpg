@@ -1,4 +1,4 @@
-import { UIActor, Color, Texture, Label } from 'excalibur';
+import { ScreenElement, Color, Texture, Label } from 'excalibur';
 import { Resources } from '../../core/resources';
 import { StrictMap } from 'simple-structures';
 import { EquipementSlot, IItem } from '../../shared';
@@ -7,7 +7,7 @@ import { State } from '../../data/state';
 const LEN = 64;
 const W = 401;
 
-export class Equipement extends UIActor {
+export class Equipement extends ScreenElement {
   private static instance: Equipement;
 
   private slots: StrictMap<EquipementSlot, EquipSlot>;
@@ -44,33 +44,41 @@ export class Equipement extends UIActor {
     if (equipement) equipement.visible = false;
   }
 
-  private subscribe() {
+  public subscribe() {
     State.get().player._equipement.subscribe((e) => {
       Object.keys(e).forEach((k: EquipementSlot) => this.slots[k].equip(e[k]));
     });
   }
 }
 
-class EquipSlot extends UIActor {
+class EquipSlot extends ScreenElement {
   private item: IItem;
-  private itemActor: UIActor;
+  private itemActor: ScreenElement;
   private drawings: string[] = [];
   private name: Label;
+  private qty: Label;
 
   public constructor(x: number, y: number, tex: Texture, name: string) {
     super(x, y, LEN, LEN);
     this.addDrawing(tex);
-    this.itemActor = new UIActor(LEN / 4, LEN / 4);
+    this.itemActor = new ScreenElement(LEN / 4, LEN / 4);
     this.itemActor.visible = false;
     this.name = new Label(name, LEN / 2 - (5 + 1.5 * name.length), LEN / 2 + 5);
     this.name.color = Color.White;
+    this.qty = new Label('', 60, 64);
+    this.qty.color = Color.White;
+    this.add(this.qty);
     this.add(this.name);
     this.add(this.itemActor);
   }
 
   async equip(item?: IItem) {
     if (!item) return this.unequip();
-    if (this.item?.name === item.name) return;
+
+    if (this.item?.name === item.name) {
+      this.item.quantity += item.quantity;
+      return this.updateQty(this.item.quantity);
+    }
 
     if (this.drawings.includes(item.name))
       return this.itemActor.setDrawing(item.name);
@@ -83,12 +91,22 @@ class EquipSlot extends UIActor {
     this.itemActor.visible = true;
     this.name.visible = false;
     this.item = item;
+    this.updateQty(item.quantity);
   }
 
   unequip() {
     this.item = undefined;
     this.name.visible = true;
     this.itemActor.visible = false;
+    this.qty.visible = false;
+  }
+
+  updateQty(qty: number) {
+    if (this.item?.quantity === qty) return;
+    const qt = qty.toFixed(0);
+    this.qty.text = qt;
+    this.qty.pos.x = 60 - 5.5 * qt.length;
+    this.qty.visible = qty > 1;
   }
 }
 
@@ -105,10 +123,11 @@ function initSlots<T>(
     earring1: f(x(0, 3), y(0), 'earring'),
     head: f(x(1, 3), y(0), 'head'),
     earring2: f(x(2, 3), y(0), 'earring'),
-    shoulders: f(x(0, 4), y(1), 'shoulders'),
-    torso: f(x(1, 4), y(1), 'torso'),
-    cape: f(x(2, 4), y(1), 'cape'),
-    necklace: f(x(3, 4), y(1), 'necklace'),
+    quiver: f(x(0, 5), y(1), 'quiver'),
+    shoulders: f(x(1, 5), y(1), 'shoulders'),
+    torso: f(x(2, 5), y(1), 'torso'),
+    cape: f(x(3, 5), y(1), 'cape'),
+    necklace: f(x(4, 5), y(1), 'necklace'),
     weapon: f(x(0, 5), y(2), 'weapon'),
     arms: f(x(1, 5), y(2), 'arms'),
     belt: f(x(2, 5), y(2), 'belt'),

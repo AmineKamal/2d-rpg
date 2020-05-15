@@ -1,20 +1,22 @@
 import { StrictMap } from 'simple-structures';
-import { Direction, IPlayerMovement } from '../../../shared';
-import { LeftJoystick } from '../../../core/leftJoystick';
+import { Direction, IPlayerMovement, TO_DIR } from '../../../shared';
+import { LeftJoystick } from '../../../controls/leftJoystick';
 import { Players } from './players';
 import { Sock } from '../../../socket/dispatcher';
 import { Player } from './player';
 import { State } from '../../../data/state';
 import { IDLE_MAP, MOVE_MAP } from '../../../core/animation.maps';
-import { Actions } from 'src/game/core/actions';
-import { Engine } from 'src/game/core/engine';
+import { Actions } from 'src/game/controls/actions';
+import { Vector } from 'excalibur';
 
-const VELOCITY: StrictMap<Direction, readonly [number, number]> = {
-  up: [0, -1],
-  down: [0, 1],
-  right: [1, 0],
-  left: [-1, 0],
-} as const;
+export const VELOCITY: (dir: Direction) => readonly [number, number] = (
+  dir: Direction
+) => {
+  if (dir < 0) return [0, 0];
+
+  const v = Vector.fromAngle((dir * Math.PI) / 180); // dir is in degrees
+  return [v.x, -v.y] as const;
+};
 
 export class PlayerMovement {
   private static initialized = false;
@@ -29,7 +31,9 @@ export class PlayerMovement {
 
     Actions.get().dash(async () => {
       j.lock();
-      Sock.emit.move(this.nextMove(undefined, true, j.allup));
+      Sock.emit.move(
+        this.nextMove(undefined, true, j.allup && !j.virtualJoystickOn)
+      );
       setTimeout(() => j.unlock(true), 300);
     });
 
@@ -43,7 +47,7 @@ export class PlayerMovement {
     reverse = false
   ) {
     const p = Players.get().self;
-    dir = dir ? dir : p.dir;
+    dir = dir || dir === 0 ? dir : p.dir;
 
     const name = p.name;
     const speed =
@@ -63,7 +67,9 @@ export class PlayerMovement {
   }
 
   private static move(p: Player, dir: Direction, speed: number) {
-    const [vx, vy] = VELOCITY[dir];
+    console.log(dir);
+    const [vx, vy] = VELOCITY(dir);
+    console.log(vx, vy);
     p.vel.x = vx * speed;
     p.vel.y = vy * speed;
     p.dir = dir;
@@ -72,7 +78,7 @@ export class PlayerMovement {
     if (speed > 250) p.dash = true;
     else p.dash = false;
 
-    p.setAnimation(MOVE_MAP[dir]);
+    p.setAnimation(MOVE_MAP[TO_DIR(dir)]);
   }
 
   private static end(p: Player, pos: { x: number; y: number }) {
@@ -81,6 +87,6 @@ export class PlayerMovement {
     p.pos.x = pos.x;
     p.pos.y = pos.y;
     p.dash = false;
-    p.setAnimation(IDLE_MAP[p.dir]);
+    p.setAnimation(IDLE_MAP[TO_DIR(p.dir)]);
   }
 }

@@ -1,4 +1,4 @@
-import { UIActor, Color, Texture, Label } from 'excalibur';
+import { ScreenElement, Color, Texture, Label } from 'excalibur';
 import { Resources } from '../../core/resources';
 import { State } from '../../data/state';
 import { IItem } from '../../shared';
@@ -12,7 +12,7 @@ const LEN = 64;
 const W = 546;
 const H = 286;
 
-export class Inventory<T extends InventorySlot> extends UIActor {
+export class Inventory<T extends InventorySlot> extends ScreenElement {
   private static instance: Inventory<InventorySlot>;
 
   private slots: T[];
@@ -67,15 +67,15 @@ export class Inventory<T extends InventorySlot> extends UIActor {
 export class InventorySlot extends Clickable {
   protected item: IItem;
   private qty: Label;
-  private itemActor: UIActor;
+  private itemActor: ScreenElement;
   private drawings: string[] = [];
 
   public constructor(r: number, c: number, tex: Texture) {
     super(LEN * c + 17, LEN * r + 16, LEN, LEN);
     this.addDrawing(tex);
-    this.qty = new Label('', 60, 64);
-    this.itemActor = new UIActor(LEN / 4, LEN / 4);
+    this.itemActor = new ScreenElement(LEN / 4, LEN / 4);
     this.itemActor.visible = false;
+    this.qty = new Label('', 60, 64);
     this.qty.color = Color.White;
     this.add(this.qty);
     this.add(this.itemActor);

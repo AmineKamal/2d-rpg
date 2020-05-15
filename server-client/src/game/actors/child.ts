@@ -1,4 +1,4 @@
-import { Actor, Color } from 'excalibur';
+import { Actor, Color, Engine } from 'excalibur';
 
 export class Child extends Actor {
   private dx = 0;
@@ -20,10 +20,10 @@ export class Child extends Actor {
     this.holder = holder;
   }
 
-  public draw(ctx: CanvasRenderingContext2D, delta: number) {
+  public update(engine: Engine, delta: number) {
     this.pos.x = this.holder.pos.x + this.dx;
     this.pos.y = this.holder.pos.y + this.dy;
-    super.draw(ctx, delta);
+    super.update(engine, delta);
   }
 
   public relocate() {

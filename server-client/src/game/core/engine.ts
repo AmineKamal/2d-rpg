@@ -8,7 +8,12 @@ import { Observable } from 'simple-structures';
 
 export class Engine extends ex.Engine {
   private constructor() {
-    super({ canvasElementId: 'game', backgroundColor: Color.Black });
+    super({
+      canvasElementId: 'game',
+      backgroundColor: Color.Black,
+      width: 1600,
+      height: 1600,
+    });
   }
   private static instance: Engine;
 
@@ -23,8 +28,16 @@ export class Engine extends ex.Engine {
 
   public startEngine() {
     if (!this.started.value) {
+      console.log('START');
       this.started.next(true);
       return super.start();
+    }
+  }
+
+  public stopEngine() {
+    if (this.started.value) {
+      this.started.next(false);
+      return super.stop();
     }
   }
 
