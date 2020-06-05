@@ -100,8 +100,12 @@ export class Enemy extends AI {
     this.tasks.follow.stop();
 
     let cols = Players.get().players.map((p) =>
-      tuple(p, this.detection.collides(p))
+      tuple(
+        p,
+        this.detection.body.collider.bounds.intersect(p.body.collider.bounds)
+      )
     );
+
     cols = cols.filter(([_, c]) => c);
 
     if (cols.length === 0) {

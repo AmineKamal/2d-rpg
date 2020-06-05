@@ -29,7 +29,9 @@ export class Player extends Animatable {
     const enemies = Enemies.get().enemies;
 
     const touching = enemies.filter((e) =>
-      e.body.collider.bounds.collides(this.attackBox.actor.body.collider.bounds)
+      e.body.collider.bounds.intersect(
+        this.attackBox.actor.body.collider.bounds
+      )
     );
 
     return touching.map((e) => e.ID);
