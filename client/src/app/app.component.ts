@@ -13,6 +13,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     const name = Math.random().toString(36).substring(7);
+    // const name = 'Amine';
+
     main(name, 'admin', {
       sex: 'male',
       skin: 'olive',

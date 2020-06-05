@@ -29,6 +29,16 @@ export class Stat implements IStat {
   get points() {
     return this.#calculatePoints(this.level);
   }
+
+  addXp(xp: number) {
+    const next = this.nextXp;
+    this.xp += xp;
+
+    if (this.xp >= next) {
+      this.level++;
+      this.xp = this.xp - next;
+    }
+  }
 }
 
 export const physical = (l: number) => 100 * l;
